@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>ItsNotMine</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="language" content="en"/>
+<link href="./favicon.ico" rel="icon" type="image/x-icon"/>
+<link href="./favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<link href="./css/main.css" rel="stylesheet" type="text/css">
+
+<script src="http://code.jquery.com/jquery-2.0.2.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
+
+<script type="text/javascript">
+    //google.load("swfobject", "2.2");
+</script>
+<script type="text/javascript">
+    //https://developers.google.com/youtube/js_api_reference?hl=ru
+
+    var playerController = function () {
+        this.ytplayer = null
+        this.startWith = null
+        this.startWithTime = null
+
+        // The "main method" of this sample. Called when someone clicks "Run".
+        this.loadPlayer = function (startId, startTime) {
+            // Lets Flash from another domain call JavaScript
+            var params = { allowScriptAccess: "always"};
+            // The element id of the Flash embed
+            var atts = { id: "ytPlayer" };
+            // All of the magic handled by SWFObject (http://code.google.com/p/swfobject/)
+
+            this.startWith = startId
+            this.startWithTime = startTime
+            //swfobject.embedSWF("http://www.youtube.com/v/"+startId+"?" +
+            swfobject.embedSWF("http://www.youtube.com/apiplayer?" +
+                    "version=3&enablejsapi=1&playerapiid=player1",
+                    "itsnotmine_player", "1024", "576", "9", null, null, params, atts);
+
+        }
+
+
+        this.onPlayerReady = function () {
+            this.ytplayer = document.getElementById("ytPlayer");
+            // This causes the updatePlayerInfo function to be called every 250ms to
+            // get fresh data from the player
+            //setInterval(updatePlayerInfo, 250);
+            //updatePlayerInfo();
+            this.ytplayer.addEventListener("onStateChange", "onPlayerStateChange");
+            this.ytplayer.addEventListener("onError", "onPlayerError");
+            //Load an initial video into the player
+            if (this.startWith) {
+                this.ytplayer.cueVideoById(this.startWith);
+                this.ytplayer.playVideo()
+
+            } else {
+                this.playNext()
+            }
+
+
+            this.setVideoVolume(100)
+        }
+        this.onPlayerError = function (errorCode) {
+            alert("An error occured of type:" + errorCode);
+        }
+        this.onPlayerStateChange = function (newState) {
+            //Возвращает состояние проигрывателя. Возможные значения:
+            // не запущен (-1),
+            // воспроизведение закончено (0),
+            // идет воспроизведение (1),
+            // пауза (2),
+            // буферизация (3),
+            // видео размечено (5).
+
+            //updateHTML("playerState", newState);
+            //console.log('new State = ' + newState)
+            if (newState == 0) {
+                this.playNext()
+            }
+
+            if (newState == 1) {
+                if (this.startWithTime) {
+                    this.ytplayer.seekTo(this.startWithTime)
+                    this.startWithTime = null
+                }
+            }
+        }
+        this.playPrev = function () {
+            this.ytplayer.cueVideoById("tnKFSc0-hjM");
+            this.ytplayer.playVideo()
+        }
+        this.playNext = function () {
+            this.ytplayer.cueVideoById("3Tf7xt1w0mM");
+            this.ytplayer.playVideo()
+        }
+
+
+        // Allow the user to set the volume from 0-100
+        this.setVideoVolume = function (volume) {
+            if (this.ytplayer) {
+                this.ytplayer.setVolume(volume);
+            }
+        }
+
+        this.playVideo = function () {
+            if (this.ytplayer) {
+                this.ytplayer.playVideo();
+            }
+        }
+
+        this.pauseVideo = function () {
+            if (this.ytplayer) {
+                this.ytplayer.pauseVideo();
+            }
+        }
+
+        this.muteVideo = function () {
+            if (this.ytplayer) {
+                this.ytplayer.mute();
+            }
+        }
+
+        this.unMuteVideo = function () {
+            if (this.ytplayer) {
+                this.ytplayer.unMute();
+            }
+        }
+
+    }
+
+
+    //        // Display information about the current state of the player
+    //        function updatePlayerInfo() {
+    //            // Also check that at least one function exists since when IE unloads the
+    //            // page, it will destroy the SWF before clearing the interval.
+    //            if (ytplayer && ytplayer.getDuration) {
+    ////                updateHTML("videoDuration", ytplayer.getDuration());
+    ////                updateHTML("videoCurrentTime", ytplayer.getCurrentTime());
+    ////                updateHTML("bytesTotal", ytplayer.getVideoBytesTotal());
+    ////                updateHTML("startBytes", ytplayer.getVideoStartBytes());
+    ////                updateHTML("bytesLoaded", ytplayer.getVideoBytesLoaded());
+    ////                updateHTML("volume", ytplayer.getVolume());
+    //            }
+    //        }
+
+
+    var plController = new playerController()
+    // This function is automatically called by the player once it loads
+    function onYouTubePlayerReady(playerId) {
+        plController.onPlayerReady()
+    }
+    function onPlayerStateChange(state) {
+        plController.onPlayerStateChange(state)
+    }
+    function onPlayerError(code) {
+        plController.onPlayerError(code)
+    }
+
+
+</script>
+
+<script type="text/javascript">
+    $('document').ready(function () {
+
+        plController.loadPlayer('GMUlhuTkM3w', 25)
+
+        $('.controls .pause_play').on(
+                'click',
+                function () {
+                    if ($(this).hasClass('play')) {
+                        plController.pauseVideo()
+                        $(this).removeClass('play').addClass('pause')
+                    } else {
+                        plController.playVideo()
+                        $(this).removeClass('pause').addClass('play')
+                    }
+                    return false
+                }
+        )
+
+        $('.controls .prev').on(
+                'click',
+                function () {
+                    plController.playPrev()
+                    return false
+                }
+        )
+        $('.controls .next').on(
+                'click',
+                function () {
+                    plController.playNext()
+                    return false
+                }
+        )
+
+    })
+</script>
+
+</head>
+
+<body>
+<div class="main_container_wrapper">
+    <div class="main_container">
+        <div class="header">
+            <div class="logo">It's Not Mine<sup>beta</sup></div>
+        </div>
+        <div class="video_container">
+            <div id="itsnotmine_player"></div>
+            <div class="controls">
+                <a class="prev" href="#">PREV</a>
+                <a class="pause_play play" href="#"><span class="pause">PAUSE</span><span class="play">PLAY</span></a>
+                <a class="next" href="#">NEXT</a>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="footer">
+            <div class="copy">&copy; drunken monkey</div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>
