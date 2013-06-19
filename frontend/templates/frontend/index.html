@@ -1,0 +1,47 @@
+{% load staticfiles %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>ItsNotMine</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="language" content="en"/>
+{#<link href="./favicon.ico" rel="icon" type="image/x-icon"/>#}
+{#<link href="./favicon.ico" rel="shortcut icon" type="image/x-icon"/>#}
+
+<link href="{% static "frontend/css/main.css" %}" rel="stylesheet" type="text/css">
+
+<script src="http://code.jquery.com/jquery-2.0.2.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
+
+<script type="text/javascript" src="{% static "frontend/js/player.js" %}"></script>
+
+<script type="text/javascript" src="{% static "frontend/js/main.js" %}"></script>
+
+</head>
+
+<body>
+<div class="main_container_wrapper">
+    <div class="main_container">
+        <div class="header">
+            <div class="logo">It's Not Mine<sup>beta</sup></div>
+        </div>
+        <div class="video_container">
+            <div id="itsnotmine_player"></div>
+            <div class="controls">
+                <a class="prev" href="#">PREV</a>
+                <a class="pause_play play" href="#"><span class="pause">PAUSE</span><span class="play">PLAY</span></a>
+                <a class="next" href="#">NEXT</a>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="footer">
+            <div class="copy">&copy; drunken monkey</div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

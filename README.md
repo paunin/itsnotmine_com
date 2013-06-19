@@ -1,4 +1,4 @@
 itsnotmine_com
 ==============
 
-youTube Based App
+Django Based App for youtube channel
